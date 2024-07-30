@@ -10,13 +10,41 @@ opti.use(express.static("./images"));
 
 opti.post('/', upload.single('image'), async (req, res, callback) => {
   const {buffer, originalname} = req.file;
-  const timestamp = new Date().toISOString();
-  const ref = `${timestamp}-${originalname}.webp`;
+  
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    const length = 16;
+    let randomstring = "";
+    for (i = 0; i < length; i++) {
+      randomstring += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+
+  const modifiedname = originalname.replaceAll(' ', '');
+  const ref = `${randomstring}${modifiedname}.webp`;
   await sharp(buffer)
   .webp({ quality: 30 })
   .toFile('./images/' + ref);
-  const fullLink = `https://localhost:3000/images/${ref}`;
-  //res.status(201).json({ fullLink });
+  const fullLink = `http://localhost:3000/images/${ref}`;
+  req.fullLink = fullLink;
+  callback(null, fullLink);
+});
+
+opti.put('/:id', upload.single('image'), async (req, res, callback) => {
+  const {buffer, originalname} = req.file;
+  
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    const length = 16;
+    let randomstring = "";
+    for (i = 0; i < length; i++) {
+      randomstring += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+
+  const modifiedname = originalname.replaceAll(' ', '');
+  const ref = `${randomstring}${modifiedname}.webp`;
+  await sharp(buffer)
+  .webp({ quality: 30 })
+  .toFile('./images/' + ref);
+  const fullLink = `http://localhost:3000/images/${ref}`;
+  req.fullLink = fullLink;
   callback(null, fullLink);
 });
 

@@ -14,9 +14,11 @@ router.use((req, res, next) => {
 });
 
 router.post('/', auth, multer, bookController.createBook);
+router.patch('/:id/rating', auth, bookController.createRating);
 router.get('/:id', bookController.getOneBook);
 router.put('/:id', auth, multer, bookController.modifyBook);
 router.delete('/:id', auth, bookController.deleteBook);
 router.get('/', bookController.getAllBooks);
+router.options('/bestrating', bookController.getBestRated);
 
 module.exports = router;

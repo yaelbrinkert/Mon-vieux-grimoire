@@ -68,12 +68,13 @@ export async function getBook(id) {
 export async function getBestRatedBooks() {
   try {
     const response = await axios({
-      method: 'GET',
+      method: 'OPTIONS',
       url: `${API_ROUTES.BEST_RATED}`,
     });
-    return formatBooks(response.data);
-  } catch (e) {
-    console.error(e);
+    const bestRatedBooks = formatBooks(response.data);
+    return bestRatedBooks;
+  } catch (err) {
+    console.error(err);
     return [];
   }
 }
@@ -98,7 +99,7 @@ export async function rateBook(id, userId, rating) {
   };
 
   try {
-    const response = await axios.post(`${API_ROUTES.BOOKS}/${id}/rating`, data, {
+    const response = await axios.patch(`${API_ROUTES.BOOKS}/${id}/rating`, data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
