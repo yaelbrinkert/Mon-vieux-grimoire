@@ -68,36 +68,35 @@ exports.getAllBooks = ('/' + '', (req, res) => {
 });
 
 
-exports.createRating = (req, res) => {
-    const newRating = {
-      userId: req.auth.userId,
-      grade: req.body.rating,
-    };
-  
-    Book.findOne({ _id: req.params.id })
-      .then((book) => {
-        if (!book) {
-          return res.status(404).json({ message: 'Book not found' });
-        }
-  
-        const existingRatingIndex = book.ratings.findIndex(rating => rating.userId === req.auth.userId);
-  
-        if (existingRatingIndex !== -1) {
-          book.ratings[existingRatingIndex].grade = newRating.grade;
-        } else {
-          book.ratings.push(newRating);
-        }
-  
-        const totalRatings = book.ratings.reduce((sum, rating) => sum + rating.grade, 0);
-        const newAverage = totalRatings / (book.ratings.length + 1);
-        book.averageRating = newAverage;
+exports.createRating = ('/:id', async (req, res) => {
+  const userId = req.auth.userId;
+  const newRating = {
+    grade: req.body.rating,
+    userId: userId,
+  };
+  try {
+    const book = await Book.findById(req.params.id);
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found' });
+    }
 
-        book.save()
-          .then(() => res.status(200).json({ message: 'Rating added/updated successfully!' }))
-          .catch(error => res.status(400).json({ error }));
-      })
-      .catch(error => res.status(400).json({ error }));
+    const existingRatingIndex = book.ratings.findIndex(rating => rating.userId === userId);
+    if (existingRatingIndex !== -1) {
+      book.ratings[existingRatingIndex].grade = newRating.grade;
+    } else {
+      book.ratings.push(newRating);
+    }
+
+    const totalRatings = book.ratings.reduce((sum, rating) => sum + rating.grade, 0);
+    const newAverage = totalRatings / book.ratings.length;
+    book.averageRating = newAverage;
+
+    await book.save();
+    res.status(200).json({ message: 'Rating added/updated successfully!', book });
+  } catch (error) {
+    res.status(400).json({ error });
   }
+});
 
 exports.getBestRated = (req, res) => {
     Book.find()
