@@ -53,11 +53,11 @@ function BookRatingForm({
 }
 
 BookRatingForm.propTypes = {
-  id: PropTypes.string.isRequired,
   rating: PropTypes.number.isRequired,
   setRating: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   setBook: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
   userRated: PropTypes.bool.isRequired,
 };
 

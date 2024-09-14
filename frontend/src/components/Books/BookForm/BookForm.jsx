@@ -72,7 +72,7 @@ function BookForm({ book, validate }) {
 
   const readOnlyStars = !!book;
   return (
-    <form method="POST" onSubmit={handleSubmit(onSubmit)} className={styles.Form} type="multipart/form-data">
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.Form}>
       <input type="hidden" id="id" {...register('id')} />
       <label htmlFor="title">
         <p>Titre du livre</p>

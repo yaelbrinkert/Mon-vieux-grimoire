@@ -68,13 +68,12 @@ export async function getBook(id) {
 export async function getBestRatedBooks() {
   try {
     const response = await axios({
-      method: 'OPTIONS',
+      method: 'GET',
       url: `${API_ROUTES.BEST_RATED}`,
     });
-    const bestRatedBooks = formatBooks(response.data);
-    return bestRatedBooks;
-  } catch (err) {
-    console.error(err);
+    return formatBooks(response.data);
+  } catch (e) {
+    console.error(e);
     return [];
   }
 }
@@ -99,12 +98,14 @@ export async function rateBook(id, userId, rating) {
   };
 
   try {
-    const response = await axios.patch(`${API_ROUTES.BOOKS}/${id}/rating`, data, {
+    const response = await axios.post(`${API_ROUTES.BOOKS}/${id}/rating`, data, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
     const book = response.data;
+    // eslint-disable-next-line no-underscore-dangle
+    book.id = book._id;
     return book;
   } catch (e) {
     console.error(e);
