@@ -31,7 +31,7 @@ opti.post("/", upload.single("image"), async (req, res, callback) => {
   callback(null, fullLink);
 });
 
-opti.put("/", upload.single("image"), async (req, res, callback) => {
+opti.put("/:id", upload.single("image"), async (req, res, callback) => {
   const { buffer, originalname } = req.file;
 
   const characters =

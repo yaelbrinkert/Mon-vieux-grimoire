@@ -27,7 +27,7 @@ exports.modifyBook = (req, res, next) => {
     } else {
       Book.updateOne(
         { _id: req.params.id },
-        { ...bookObject, _id: req.params.id, imageUrl: req.fullLink }
+        { ...bookObject, imageUrl: req.fullLink }
       )
         .then(() => res.status(200).json({ message: "Objet modifié!" }))
         .catch((error) => res.status(401).json({ error }));
@@ -57,7 +57,6 @@ exports.deleteBook = (req, res, next) => {
 };
 
 exports.getOneBook = (req, res) => {
-  console.log("s");
   Book.findOne({
     _id: req.params.id,
   })
